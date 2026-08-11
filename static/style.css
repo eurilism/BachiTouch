@@ -1,0 +1,933 @@
+:root {
+  --bg-top: #ffb5b5;
+  --bg-bottom: #2e4f65;
+  --panel: rgba(12, 18, 26, 0.88);
+  --panel-soft: rgba(255, 255, 255, 0.08);
+  --text: #f8f9fb;
+  --accent-blue: #72c1ff;
+  --accent-red: #ff7c83;
+  --accent: #ffd76d;
+  --muted: #dfe7eb;
+}
+* {
+  box-sizing: border-box;
+}
+html, body {
+  min-height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+  color: var(--text);
+  background-color: var(--bg-bottom);
+  background-image: url('/static/bg.jpg');
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  touch-action: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+button, input {
+  font: inherit;
+}
+.hidden {
+  display: none !important;
+}
+.fixed-button {
+  position: fixed;
+  z-index: 40;
+}
+.fixed-button.bottom-right {
+  right: 18px;
+  bottom: 18px;
+}
+.fixed-button.bottom-left {
+  left: 18px;
+  bottom: 18px;
+}
+.fixed-button.bottom-left.mobile-view-button {
+  left: calc(18px + 58px + 10px) !important;
+}
+.mobile-view-button {
+  left: calc(18px + 58px + 10px);
+}
+.mobile-view-button.active {
+  background: rgba(255,255,255,0.14);
+}
+body.mobile-view .page-title,
+body.mobile-view .overlay-row {
+  display: none !important;
+}
+body.mobile-view .status-row {
+  display: flex !important;
+  top: 12px;
+  right: 12px;
+  left: auto;
+  gap: 8px;
+}
+body.mobile-view .top-bar {
+  background: transparent;
+  padding: 0 12px 12px;
+  min-height: 0;
+}
+body.mobile-view .top-controls {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  right: auto;
+  bottom: auto;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  background: rgba(12, 18, 26, 0.72);
+  padding: 8px;
+  border-radius: 22px;
+  gap: 8px;
+  z-index: 50;
+}
+body.mobile-view .button-group {
+  flex-direction: row;
+  gap: 8px;
+}
+body.mobile-view .button-group .pause-button,
+body.mobile-view .icon-button {
+  width: 56px;
+  height: 56px;
+}
+body.mobile-view #drum-stage {
+  max-height: 74vh;
+}
+body.mobile-view .panel {
+  right: 12px;
+  left: 12px;
+  top: calc(12px + 56px + 16px);
+  bottom: 18px;
+  width: calc(100vw - 24px);
+  max-height: calc(100vh - 96px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-bottom: 14px;
+}
+#app {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  min-height: 100vh;
+  padding: 98px 18px 18px;
+}
+.top-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 84px;
+  padding: 18px;
+  z-index: 30;
+}
+.content {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+.page-title {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: clamp(22px, 4vw, 34px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  text-shadow: 0 6px 18px rgba(0,0,0,0.18);
+}
+
+.page-title .app-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+.status-row {
+  position: absolute;
+  top: 62px;
+  left: 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 30;
+}
+.status-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.35);
+  border: 1px solid rgba(255,255,255,0.4);
+  box-shadow: 0 0 0 4px rgba(255,255,255,0.06);
+}
+.status-text {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text);
+}
+.status-dot.connected {
+  background: #72c1ff;
+  box-shadow: 0 0 0 6px rgba(114, 193, 255, 0.18);
+}
+.status-dot.connecting {
+  background: #ffd76d;
+  box-shadow: 0 0 0 6px rgba(255, 215, 109, 0.18);
+}
+.status-dot.disconnected {
+  background: #ff7c83;
+  box-shadow: 0 0 0 6px rgba(255, 124, 131, 0.18);
+}
+.status-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.16);
+  color: var(--text);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+/* Make the ping status chip a solid white pill with dark text */
+#ping-status {
+  background: #ffffff !important;
+  color: #08131b !important;
+  border: 0 !important;
+}
+/* Ping threshold: use an inset box-shadow so the "border" sits inside the chip bounds */
+#ping-status {
+  transition: box-shadow 160ms ease;
+}
+#ping-status.ping-good {
+  box-shadow: inset 0 0 0 4px rgba(76, 175, 80, 0.95) !important; /* green inner border */
+}
+#ping-status.ping-warn {
+  box-shadow: inset 0 0 0 4px rgba(255, 167, 38, 0.95) !important; /* orange inner border */
+}
+#ping-status.ping-urgent {
+  box-shadow: inset 0 0 0 4px rgba(209, 72, 36, 0.95) !important; /* darker orange-red inner border */
+}
+#ping-status.ping-bad {
+  box-shadow: inset 0 0 0 4px rgba(244, 67, 54, 0.95) !important; /* red inner border */
+}
+
+/* When the connection is wired, hide ping inner borders to align the chip visually */
+#connection-type.wired + #ping-status.ping-good,
+#connection-type.wired + #ping-status.ping-warn,
+#connection-type.wired + #ping-status.ping-bad {
+  box-shadow: none !important;
+}
+
+#connection-icon,
+.status-icon {
+  width: 16px !important;
+  height: 16px !important;
+  object-fit: contain;
+  filter: brightness(0) invert(1) !important;
+  margin-right: 2px !important;
+  margin-bottom: 3px !important;
+}
+
+#connection-icon.no-label,
+.status-icon.no-label {
+  margin-right: 0 !important;
+}
+
+#connection-label,
+.status-label {
+  line-height: 1;
+}
+
+#connection-label:empty,
+.status-label:empty {
+  display: none !important;
+}
+
+.status-chip.usb-disconnected {
+  /* Use the same solid disconnected styling as other solid chips */
+  background: rgba(255, 124, 131, 0.95) !important;
+  color: #08131b !important;
+  border-color: rgba(255, 124, 131, 0.9) !important;
+}
+/* Use same visual treatment for wireless disconnect state */
+.status-chip.wifi-disconnected {
+  /* Use the same solid disconnected styling as other solid chips */
+  background: rgba(255, 124, 131, 0.95) !important;
+  color: #08131b !important;
+  border-color: rgba(255, 124, 131, 0.9) !important;
+}
+
+/* Show original (black) icon inside disconnected chips instead of the inverted white */
+.status-chip.wifi-disconnected #connection-icon,
+.status-chip.wifi-disconnected .status-icon,
+.status-chip.usb-disconnected #connection-icon,
+.status-chip.usb-disconnected .status-icon {
+  filter: none !important;
+}
+
+/* Show black icon for wireless chip states (connected/reconnecting) */
+.status-chip.wireless #connection-icon,
+.status-chip.wireless .status-icon {
+  filter: none !important;
+}
+/* Show black icon for wired chip states as well (make usb.svg appear black) */
+.status-chip.wired #connection-icon,
+.status-chip.wired .status-icon {
+  filter: none !important;
+}
+.status-chip.connected {
+  background: rgba(114, 193, 255, 0.95);
+  color: #08131b;
+  border-color: rgba(114, 193, 255, 0.9);
+}
+
+/* Wired (USB) connected uses green instead of blue */
+.status-chip.wired.connected {
+  background: rgba(102, 187, 106, 0.95) !important;
+  color: #08131b !important;
+  border-color: rgba(102, 187, 106, 0.9) !important;
+}
+.status-chip.connecting {
+  background: rgba(255, 205, 109, 0.95);
+  color: #08131b;
+  border-color: rgba(255, 205, 109, 0.9);
+}
+.status-chip.disconnected {
+  background: rgba(255, 124, 131, 0.95);
+  color: #08131b;
+  border-color: rgba(255, 124, 131, 0.9);
+}
+.top-controls {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  z-index: 30;
+}
+.button-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.pause-button {
+  min-width: 58px;
+  width: 58px;
+  height: 58px;
+  padding: 0;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.18);
+  background: var(--panel);
+  color: var(--text);
+  cursor: pointer;
+  box-shadow: 0 12px 28px rgba(0,0,0,0.18);
+  display: grid;
+  place-items: center;
+  transition: transform 0.14s ease, background 0.14s ease, opacity 0.14s ease, width 0.14s ease, height 0.14s ease;
+}
+.pause-button.compact {
+  width: 42px;
+  height: 42px;
+}
+.pause-button.compact img {
+  width: 18px;
+  height: 18px;
+}
+.btn-compact.compact,
+#btn-hide.compact,
+.pause-button.compact {
+  width: 42px;
+  height: 42px;
+}
+.btn-compact.compact img,
+#btn-hide.compact img,
+.pause-button.compact img {
+  width: 18px;
+  height: 18px;
+}
+body.mobile-view .btn-compact.compact,
+body.mobile-view #btn-hide.compact,
+body.mobile-view .pause-button.compact {
+  width: 42px !important;
+  height: 42px !important;
+}
+body.mobile-view .btn-compact.compact img,
+body.mobile-view #btn-hide.compact img,
+body.mobile-view .pause-button.compact img {
+  width: 18px !important;
+  height: 18px !important;
+}
+.pause-button:hover {
+  transform: translateY(-1px);
+  background: rgba(255,255,255,0.1);
+}
+.pause-button:active {
+  opacity: 0.92;
+}
+.pause-button img {
+  width: 24px;
+  height: 24px;
+  filter: brightness(0) invert(1);
+}
+.overlay-row {
+  position: absolute;
+  top: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 30;
+}
+
+.key-overlay {
+  display: grid;
+  grid-template-columns: repeat(4, auto);
+  gap: 10px;
+  padding: 6px 10px;
+  background: rgba(12, 18, 26, 0.72);
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 18px;
+}
+
+.select-button {
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.08);
+  display: grid;
+  place-items: center;
+  transition: background-color 120ms ease, border-color 120ms ease, transform 120ms ease;
+}
+
+.select-button:hover,
+.select-button:active,
+.select-button.clicked {
+  background: rgba(255,255,255,0.96);
+  border-color: rgba(255,255,255,0.98);
+}
+
+.select-button.clicked img,
+.select-button:active img {
+  filter: none;
+}
+
+.select-button img {
+  width: 26px;
+  height: 26px;
+  filter: brightness(0) invert(1);
+}
+.key-button {
+  min-width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.08);
+  color: var(--text);
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: default;
+  display: grid;
+  place-items: center;
+  transition: background-color 120ms ease, border-color 120ms ease, color 120ms ease;
+}
+.key-overlay .key-button {
+  color: var(--text);
+}
+.key-overlay.left-rim-response .key-button.left.rim,
+.key-overlay.left-face-response .key-button.left.face,
+.key-overlay.right-rim-response .key-button.right.rim,
+.key-overlay.right-face-response .key-button.right.face {
+  color: #111;
+}
+.key-overlay.left-rim-response .key-button.left.rim,
+.key-overlay.right-rim-response .key-button.right.rim {
+  background: rgba(114, 193, 255, 0.96);
+  border-color: rgba(114, 193, 255, 0.9);
+}
+.key-overlay.left-face-response .key-button.left.face,
+.key-overlay.right-face-response .key-button.right.face {
+  background: rgba(255, 124, 131, 0.96);
+  border-color: rgba(255, 124, 131, 0.9);
+}
+.icon-button {
+  width: 58px;
+  height: 58px;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.18);
+  background: var(--panel);
+  color: var(--text);
+  cursor: pointer;
+  box-shadow: 0 12px 28px rgba(0,0,0,0.18);
+  display: grid;
+  place-items: center;
+  transition: transform 0.14s ease, background 0.14s ease, opacity 0.14s ease;
+}
+.icon-button img,
+.key-button img {
+  width: 24px;
+  height: 24px;
+  filter: brightness(0) invert(1);
+}
+.icon-button:hover {
+  transform: translateY(-1px);
+  background: rgba(255,255,255,0.1);
+}
+.icon-button:active {
+  opacity: 0.92;
+}
+.hide-button {
+  width: 48px;
+  height: 48px;
+}
+#drum-stage {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(100%, 760px);
+  max-height: min(84vh, 760px);
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  overflow: visible;
+  z-index: 50;
+  pointer-events: none;
+}
+#drum {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-origin: bottom center;
+  transform: scale(var(--drum-scale, 1));
+  transition: transform 40ms ease;
+  will-change: transform;
+  background: transparent;
+  box-shadow: none;
+  overflow: visible;
+  z-index: 60;
+}
+
+#drum.bounce {
+  transform: scale(calc(var(--drum-scale, 1) * 0.995));
+}
+#drum-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: bottom center;
+  pointer-events: none;
+  z-index: 70;
+}
+.touch-area {
+  position: absolute;
+  border: none;
+  background: transparent;
+  transition: background-color 0.18s ease;
+  z-index: 30;
+}
+.rim-overlay,
+.touch-area {
+  touch-action: none;
+}
+.touch-area.face {
+  pointer-events: auto;
+  z-index: 75;
+}
+.rim-overlay {
+  pointer-events: auto;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+  border: none;
+  background: transparent;
+  z-index: 15;
+  cursor: default;
+}
+.rim-overlay.left {
+  left: 0;
+}
+.rim-overlay.right {
+  right: 0;
+}
+.rim-overlay.active {
+  background: rgba(255,255,255,0.08);
+}
+.touch-area.rim.left {
+  left: 0;
+  top: 0;
+  width: 50%;
+  height: 100%;
+  z-index: 1;
+}
+.touch-area.rim.right {
+  right: 0;
+  top: 0;
+  width: 50%;
+  height: 100%;
+  z-index: 1;
+}
+.touch-area.face.left,
+.touch-area.face.right {
+}
+.touch-area.face.left {
+  left: 0;
+  top: 50%;
+  width: 50%;
+  height: 50%;
+  z-index: 75;
+  border-radius: 340px 0px 0 0;
+}
+.touch-area.face.right {
+  left: 50%;
+  top: 50%;
+  width: 50%;
+  height: 50%;
+  z-index: 75;
+  border-radius: 0px 340px 0 0;
+}
+
+.show-touch-zones .rim-overlay.left,
+.show-touch-zones .rim-overlay.right {
+  background: rgba(74, 137, 255, 0.24);
+}
+
+.show-touch-zones .touch-area.face.left,
+.show-touch-zones .touch-area.face.right {
+  background: rgba(255, 76, 76, var(--touch-zone-opacity, 0.22));
+}
+
+.show-touch-zones .touch-area.face.left.active,
+.show-touch-zones .touch-area.face.right.active {
+  background: rgba(255, 76, 76, 0.34);
+}
+.rim-overlay.left.active,
+.rim-overlay.right.active,
+.touch-area.rim.left.active,
+.touch-area.rim.right.active {
+  background: transparent;
+}
+.touch-area.face.left.active,
+.touch-area.face.right.active {
+  background: transparent;
+}
+.labels {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.label {
+  position: absolute;
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: 0.92rem;
+  letter-spacing: 0.06em;
+  text-shadow: 0 10px 24px rgba(0,0,0,0.24);
+}
+.label.left.face { left: 16%; top: 30%; color: var(--accent-red); }
+.label.right.face { right: 16%; top: 30%; color: var(--accent-red); }
+.panel {
+  position: absolute;
+  top: 98px;
+  right: 18px;
+  width: min(330px, calc(100vw - 34px));
+  background: var(--panel);
+  border-radius: 24px;
+  padding: 18px;
+  border: 1px solid rgba(255,255,255,0.12);
+  box-shadow: 0 32px 72px rgba(0,0,0,0.28);
+  backdrop-filter: blur(18px);
+  z-index: 60;
+  overflow-y: auto;
+  max-height: calc(100vh - 116px);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.16) transparent;
+  scrollbar-gutter: stable both-edges;
+}
+.panel {
+  padding-right: 24px;
+}
+.panel::-webkit-scrollbar {
+  width: 10px;
+}
+.panel::-webkit-scrollbar-track {
+  background: transparent;
+  margin: 20px 0;
+  border-radius: 999px;
+}
+.panel::-webkit-scrollbar-track-piece {
+  margin: 20px 0;
+  border-radius: 999px;
+}
+.panel::-webkit-scrollbar-button {
+  display: none;
+}
+.panel::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.18);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+.panel::-webkit-scrollbar-thumb:hover {
+  background: rgba(255,255,255,0.32);
+}
+.panel::-webkit-scrollbar-corner {
+  background: transparent;
+}
+.panel-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.18);
+  z-index: 55;
+  cursor: default;
+}
+.panel-backdrop.hidden {
+  display: none;
+}
+.panel.hidden {
+  display: none;
+}
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.panel h2 {
+  margin: 0;
+  font-size: 1.18rem;
+}
+.close-button {
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.06);
+  color: var(--text);
+  cursor: pointer;
+}
+.panel-note {
+  margin: 0 0 16px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+.map-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.map-row label {
+  width: 110px;
+  color: var(--muted);
+}
+input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(255,255,255,0.08);
+  color: var(--text);
+  text-align: center;
+}
+.panel-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+.panel-actions button {
+  flex: 1;
+  border: none;
+  border-radius: 14px;
+  padding: 12px 14px;
+  cursor: pointer;
+  color: #172227;
+  font-weight: 700;
+}
+.scale-control {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+#drum-scale {
+  flex: 1;
+}
+#drum-scale-value {
+  min-width: 50px;
+  text-align: right;
+  color: var(--text);
+}
+#save-mapping {
+  background: var(--accent);
+}
+#reset-defaults {
+  background: rgba(255,255,255,0.14);
+  color: var(--text);
+}
+@media (max-width: 720px) {
+  .top-bar {
+    align-items: flex-start;
+    flex-wrap: wrap;
+    padding: 12px;
+    height: auto;
+  }
+  .page-title {
+    top: 12px;
+    left: 12px;
+    font-size: clamp(18px, 5vw, 28px);
+  }
+  .page-title .app-icon {
+    width: 36px;
+    height: 36px;
+  }
+  .status-row {
+    top: 58px;
+    left: 12px;
+    right: 12px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .button-group {
+    flex-direction: row;
+    gap: 8px;
+  }
+  .top-controls {
+    position: fixed;
+    top: 12px;
+    right: 12px;
+    background: rgba(12, 18, 26, 0.72);
+    padding: 8px;
+    border-radius: 22px;
+    gap: 8px;
+    z-index: 30;
+  }
+  .icon-button {
+    width: 48px;
+    height: 48px;
+    border-radius: 18px;
+  }
+  .pause-button {
+    min-width: 48px;
+    width: 48px;
+    height: 48px;
+    border-radius: 18px;
+  }
+  .pause-button img {
+    width: 20px;
+    height: 20px;
+  }
+  .select-button,
+  .key-button {
+    min-width: 34px;
+    height: 34px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+  }
+  .key-overlay {
+    gap: 8px;
+    padding: 4px 8px;
+  }
+  .panel {
+    top: auto;
+    bottom: 16px;
+    right: 16px;
+    width: calc(100vw - 32px);
+    max-height: calc(100vh - 32px);
+  }
+  .panel-header {
+    gap: 10px;
+  }
+  .panel h2 {
+    font-size: 1.1rem;
+  }
+  .map-row {
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .map-row label {
+    width: 96px;
+    font-size: 0.95rem;
+  }
+  input {
+    padding: 10px 12px;
+  }
+  .panel-actions button {
+    padding: 10px 12px;
+  }
+  .fixed-button.bottom-right {
+    right: 12px;
+    bottom: 12px;
+  }
+  .fixed-button.bottom-left {
+    left: 12px;
+    bottom: 12px;
+  }
+  .mobile-view-button.active {
+    background: rgba(255,255,255,0.14);
+  }
+}
+
+@media (max-width: 520px) {
+  .top-controls {
+    top: 10px;
+    right: 10px;
+    padding: 6px;
+    gap: 6px;
+  }
+  .icon-button,
+  .pause-button {
+    width: 44px;
+    height: 44px;
+  }
+  .pause-button img {
+    width: 18px;
+    height: 18px;
+  }
+  .select-button,
+  .key-button {
+    min-width: 30px;
+    height: 30px;
+    font-size: 0.78rem;
+  }
+  .status-row {
+    top: 52px;
+    left: 10px;
+    right: 10px;
+  }
+  .panel {
+    right: 10px;
+    bottom: 10px;
+    width: calc(100vw - 20px);
+    border-radius: 18px;
+    padding: 14px;
+  }
+  .map-row label {
+    width: 90px;
+  }
+}

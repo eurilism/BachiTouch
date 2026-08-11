@@ -1,0 +1,3 @@
+aiohttp>=3.8
+pynput>=1.7
+PyQt6>=6.7

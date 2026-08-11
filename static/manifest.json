@@ -1,0 +1,21 @@
+{
+  "name": "BachiTouch",
+  "short_name": "BachiTouch",
+  "start_url": "/static/index.html",
+  "scope": "/static/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#b22222",
+  "icons": [
+    {
+      "src": "/static/icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/static/icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

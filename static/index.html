@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1" />
+  <meta name="theme-color" content="#b22222" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <link rel="manifest" href="/static/manifest.json" />
+  <link rel="apple-touch-icon" href="/static/icon.png" />
+  <title>BachiTouch</title>
+  <link rel="icon" href="/static/icon.png" />
+  <link rel="stylesheet" href="/static/style.css?v=4" />
+</head>
+<body>
+  <div id="app">
+    <div class="top-bar">
+      <div class="page-title">
+        BachiTouch
+        <img class="app-icon" src="/static/icon.png" alt="BachiTouch icon" />
+      </div>
+      <div class="status-row">
+        <span id="connection-type" class="status-chip connection-chip" aria-label="Connection mode">
+          <img id="connection-icon" src="/static/usb.svg" alt="Connection icon" class="status-icon" width="12" height="12" style="width: 12px; height: 12px; filter: brightness(0) invert(1); margin-right: 4px;" />
+          <span id="connection-label" class="status-label">--</span>
+        </span>
+        <span id="ping-status" class="status-chip">Ping: --</span>
+      </div>
+      <div class="top-controls">
+        <div class="button-group" id="button-group">
+          <button id="btn-settings" class="icon-button" aria-label="Settings">
+            <img src="/static/settings.svg" alt="Settings" />
+          </button>
+          <button id="btn-help" class="icon-button" aria-label="Help">
+            <img src="/static/help.svg" alt="Help" />
+          </button>
+        </div>
+        <button id="btn-pause" class="icon-button pause-button" type="button" data-control="pause" aria-label="Pause">
+          <img src="/static/pause.svg" alt="Pause" />
+        </button>
+      </div>
+    </div>
+
+    <div class="overlay-row" aria-label="Quick key overlay row">
+      <button class="icon-button select-button left" type="button" data-control="left_rim_shift" aria-label="Select left">
+        <img src="/static/select-left.svg" alt="Select left" />
+      </button>
+      <div class="key-overlay" aria-label="Quick key overlay">
+        <button class="key-button rim left" type="button" data-control="left_rim">D</button>
+        <button class="key-button face left" type="button" data-control="left_face">F</button>
+        <button class="key-button face right" type="button" data-control="right_face">J</button>
+        <button class="key-button rim right" type="button" data-control="right_rim">K</button>
+      </div>
+      <button class="icon-button select-button right" type="button" data-control="right_rim_shift" aria-label="Select right">
+        <img src="/static/select-right.svg" alt="Select right" />
+      </button>
+    </div>
+
+    <button type="button" class="rim-overlay left" data-control="left_rim" aria-label="Left Rim"></button>
+    <button type="button" class="rim-overlay right" data-control="right_rim" aria-label="Right Rim"></button>
+    <div id="panel-backdrop" class="panel-backdrop hidden"></div>
+
+    <div class="content">
+      <div id="drum-stage">
+        <div id="drum" aria-label="Taiko drum control">
+          <img id="drum-image" src="/static/drum-half.png" alt="Taiko drum" />
+          <button type="button" class="touch-area face left" data-control="left_face" aria-label="Left Face"></button>
+          <button type="button" class="touch-area face right" data-control="right_face" aria-label="Right Face"></button>
+        </div>
+      </div>
+
+      <aside id="settings-panel" class="panel hidden">
+        <div class="panel-header">
+          <h2>Settings</h2>
+          <button id="close-settings" class="close-button">×</button>
+        </div>
+        <p class="panel-note">Change key mappings and drum scale for your device.</p>
+        <div class="map-row">
+          <label>Left Rim</label>
+          <input id="map-left-rim" maxlength="1" />
+        </div>
+        <div class="map-row">
+          <label>Left Face</label>
+          <input id="map-left-face" maxlength="1" />
+        </div>
+        <div class="map-row">
+          <label>Right Face</label>
+          <input id="map-right-face" maxlength="1" />
+        </div>
+        <div class="map-row">
+          <label>Right Rim</label>
+          <input id="map-right-rim" maxlength="1" />
+        </div>
+        <div class="map-row touchzone-row">
+          <label for="toggle-touch-zones">Show touch zones</label>
+          <input id="toggle-touch-zones" type="checkbox" />
+        </div>
+        <div class="map-row">
+          <label for="touch-zone-opacity">Touch zone opacity</label>
+          <div class="opacity-control">
+            <input id="touch-zone-opacity" type="range" min="10" max="80" step="5" />
+            <span id="touch-zone-opacity-value">22%</span>
+          </div>
+        </div>
+        <div class="map-row">
+          <label>Drum Scale</label>
+          <div class="scale-control">
+            <input id="drum-scale" type="range" min="0.75" max="2.0" step="0.05" />
+            <span id="drum-scale-value">100%</span>
+          </div>
+        </div>
+        <div class="panel-actions">
+          <button id="save-mapping">Save</button>
+          <button id="reset-defaults">Reset</button>
+        </div>
+      </aside>
+
+      <aside id="help-panel" class="panel hidden">
+        <div class="panel-header">
+          <h2>Help</h2>
+          <button id="close-help" class="close-button">×</button>
+        </div>
+        <p>Tap the drum face for don hits and the outside of the drum for ka hits.</p>
+        <p>Use the mobile view button on the bottom-left to switch to the mobile interface.</p>
+        <p>Use the settings button to change key bindings and drum scale.</p>
+        <p>Hide button on the bottom-right will remove settings/help from view during gameplay.</p>
+        <h2>About</h2>
+        <p>BachiTouch is just somewhat of a personal project that i needed/wanted since i haven't seen something like this afaik.</p>
+        <p>Figured testing Github Copilot and making this seems like a good opportunity.</p>
+        <p>Made by Eurilism. This is all vibecoded using Github Copilot.</p>
+        <p>Every image is ai-generated lmao.</p>
+        <p>I just wasted a gazillon gallons of water just for this.</p>
+        <p>Icons by Lucide (https://lucide.dev/)</p>
+      </aside>
+    </div>
+  </div>
+
+  <button id="btn-fullscreen" class="icon-button fixed-button bottom-left" aria-label="Fullscreen">
+    <img src="/static/fullscreen.svg" alt="Fullscreen" />
+  </button>
+  <button id="btn-mobile-view" class="icon-button fixed-button bottom-left mobile-view-button" aria-label="Toggle mobile UI">
+    <img src="/static/mobile.svg" alt="Mobile view" />
+  </button>
+  <button id="btn-hide" class="icon-button fixed-button bottom-right" aria-label="Hide UI">
+    <img src="/static/hide.svg" alt="Hide UI" />
+  </button>
+
+  <script src="/static/app.js?v=2"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/static/sw.js').catch(() => {
+          // service worker registration failed; continue without it
+        });
+      });
+    }
+  </script>
+</body>
+</html>
