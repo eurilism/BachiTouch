@@ -1,12 +1,13 @@
 # BachiTouch
 
-BachiTouch is a packaged Taiko remote controller for Windows. It runs as a standalone app that serves a mobile touchscreen drum UI from your PC, forwards taps over WebSocket, and simulates keyboard input for Taiko no Tatsujin or similar rhythm games.
+BachiTouch is a web-based touchscreen drum controller for Taiko no Tatsujin and similar derivatives. It runs as a A standalone Windows app that hosts a web-based controller that serves a mobile touchscreen drum UI from your PC, forwards taps over WebSocket, and simulates keyboard input for Taiko no Tatsujin or similar derivatives.
+
+## ‼️DISCLAIMER
+This app and it's contents are ENTIRELY MADE by using Github Copilot in VSC and Google Gemini as an exploration of automated code generation. By executing, installing, or interacting with this app, you acknowledge and agree that you do so entirely at your own discretion and risk. That being said I haven't found something like this after searching for years and figured playing around with Github Copilot and making this seems like a good opportunity. So if anyone sees this repo, **PLEASE MAKE SOMETHING LIKE THIS WITHOUT ALL THE VIBECODING STUFF!!!**
 
 ## What’s Included
 - `BachiTouch.exe` — packaged desktop launcher and web server.
-- bundled Python runtime and dependencies.
-- `static/` — mobile client UI, styles, icons, service worker, and assets.
-- optional `adb/` folder for Android USB reverse support.
+- Bundled Python runtime and dependencies.
 
 ## Highlights
 - Touch-optimized drum interface with left/right rim and face hit zones.
@@ -34,7 +35,7 @@ BachiTouch is a packaged Taiko remote controller for Windows. It runs as a stand
 ## USB Mode (Android)
 1. Enable USB debugging on the Android device.
 2. Connect the device to the PC with USB.
-3. Enable `Connect by USB` in the app.
+3. Enable `Connect by USB` in the app and start the server.
 4. Allow the device to authorize ADB access.
 5. The app will use `adb reverse` so the phone can open `http://localhost:<port>/`.
 
@@ -42,12 +43,6 @@ BachiTouch is a packaged Taiko remote controller for Windows. It runs as a stand
 - The packaged version already includes required Python dependencies; no separate `pip install` step is required.
 - If the game needs focus, make sure the Taiko window is active when tapping.
 - Use the GUI to stop the server before closing the app.
-
-## Included Files
-- `BachiTouch.exe` — packaged application executable.
-- `static/` — client assets and service worker files.
-- `adb/` — optional Android ADB helper binaries.
-- `README.md` — documentation.
 
 ## Troubleshooting
 - If the mobile UI cannot connect, confirm the server is running and use the exact URL shown in the GUI.
