@@ -1,6 +1,6 @@
 # BachiTouch
 
-BachiTouch is a web-based touchscreen drum controller for Taiko no Tatsujin and similar derivatives. It runs as a A standalone Windows app that hosts a web-based controller that serves a mobile touchscreen drum UI from your PC, forwards taps over WebSocket, and simulates keyboard input for Taiko no Tatsujin or similar derivatives.
+BachiTouch is a web-based touchscreen drum controller for Taiko no Tatsujin and similar derivatives. It runs as a standalone Windows app that hosts a web-based controller that serves a mobile touchscreen drum UI from your PC, forwards taps over WebSocket, and simulates keyboard input for Taiko no Tatsujin or similar derivatives.
 
 ## ‼️DISCLAIMER
 This app and it's contents are ENTIRELY MADE by using Github Copilot in VSC and Google Gemini as an exploration of automated code generation. By executing, installing, or interacting with this app, you acknowledge and agree that you do so entirely at your own discretion and risk. 
