@@ -174,12 +174,14 @@ class HowToUseDialog(QDialog):
         self.sections = {
             'wifi': (
                 'WIFI / Hotspot Usage',
+                'Note: Hotspot is recommended for low latency.',
+                'Note: For Android devices, USB is recommended for the lowest latency.\n\n'
                 '1. Start the server with the desired Host IP and Port. (Default is recommended.)\n\n'
                 '2. If using Wi-Fi/hotspot, connect your mobile device to the same network.\n\n'
-                '   You can also start a hotspot on this host PC and connect your device to it.\n\n'
+                'For Hotspot: Open a Hotspot on this host PC and connect your device to it.\n\n'
                 '3. Use the Mobile Device URL shown in the GUI on your phone.\n\n',
-                'Note: This is the only way for iOS devices to connect.\n\n',
-                'Note 2: Doing stuff like wired connection for iOS is too cumbersome and me is too lazy for that lol.',
+
+                'Note: This is the only way for iOS devices to connect.',
             ),
             'usb': (
                 'USB (Android) Usage',
@@ -208,9 +210,17 @@ class HowToUseDialog(QDialog):
         self.button_wifi.setChecked(section == 'wifi')
         self.button_usb.setChecked(section == 'usb')
         self.button_open.setChecked(section == 'open')
-        title, text = self.sections[section]
+
+        section_data = self.sections[section]
+        if isinstance(section_data, tuple):
+            title = str(section_data[0])
+            body_parts = [str(part) for part in section_data[1:] if str(part).strip()]
+            text = '\n\n'.join(body_parts)
+        else:
+            title = str(section_data[0])
+            text = str(section_data[1]) if len(section_data) > 1 else ''
+
         self.content_box.setText(f'{title}\n\n{text}')
-    
 
 
 class ServerGUI(QMainWindow):
@@ -402,6 +412,10 @@ class ServerGUI(QMainWindow):
         self.how_to_button = QPushButton('How to Use')
         self.how_to_button.clicked.connect(self.show_how_to_use)
         controls_layout.addWidget(self.how_to_button)
+
+        self.about_button = QPushButton('About')
+        self.about_button.clicked.connect(self.show_about)
+        controls_layout.addWidget(self.about_button)
         controls_layout.addStretch()
 
         # Place controls directly so everything is visible without scrolling
@@ -835,6 +849,13 @@ class ServerGUI(QMainWindow):
     def show_how_to_use(self):
         dialog = HowToUseDialog(self)
         dialog.exec()
+
+    def show_about(self):
+        QMessageBox.information(
+            self,
+            'About BachiTouch',
+            'Made by Eurilism. Everything is literally vibecoded with Github Copilot lmao :DDD',
+        )
 
     def closeEvent(self, event):
         if self.server_thread and self.server_thread.is_alive():
