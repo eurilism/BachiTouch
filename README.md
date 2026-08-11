@@ -30,8 +30,8 @@ That being said I haven't found something like this after searching for years an
 6. Tap the drum zones to send input to the PC game.
 
 ## Mobile Usage
-- Tap the outer drum area for rim hits (Katsu).
-- Tap the inner drum area for face hits (Don).
+- Tap outside the drum for rim hits (Katsu).
+- Tap inside the drum for face hits (Don).
 - Use the quick overlay buttons for rapid input.
 - Press the pause button to send a pause/escape signal to the game.
 - The UI automatically shows connection status and ping latency.
