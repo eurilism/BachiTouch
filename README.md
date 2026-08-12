@@ -1,4 +1,5 @@
-# BachiTouch
+<img src="bachitouchbanner.png" alt="BachiTouch Banner" width="500">
+
 
 BachiTouch is a web-based touchscreen drum controller for Taiko no Tatsujin and similar derivatives. It runs as a standalone Windows app that hosts a web-based controller that serves a mobile touchscreen drum UI from your PC, forwards taps over WebSocket, and simulates keyboard input for Taiko no Tatsujin or similar derivatives.
 
