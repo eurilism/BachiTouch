@@ -59,7 +59,7 @@ That being said I haven't found something like this after searching for years an
 - If USB mode fails, confirm ADB authorization on the device and that USB debugging is enabled.
 - If game input is not detected, ensure the Taiko game window has focus on the PC.
 
-  ## Build Instructions
+## Build Instructions
 - Download Python
 - Clone the repository to your PC
 - Open the terminal to the cloned repository
