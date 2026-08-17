@@ -375,6 +375,12 @@
     if (scaleInput) scaleInput.value = scale;
     if (scaleValue) scaleValue.textContent = `${Math.round(scale * 100)}%`;
     updateDrumScale(scale);
+    const bounceIntensity = loadBounceIntensity();
+    const bounceInput = document.getElementById('drum-bounce-intensity');
+    const bounceValue = document.getElementById('drum-bounce-intensity-value');
+    if (bounceInput) bounceInput.value = 1.899 - bounceIntensity;
+    if (bounceValue) bounceValue.textContent = `${((1 - bounceIntensity) * 100).toFixed(1)}%`;
+    updateDrumBounceIntensity(bounceIntensity);
     setTouchZonePreview(previewEnabled);
   }
 
@@ -406,6 +412,26 @@
     const drum = document.getElementById('drum');
     if (drum) {
       drum.style.setProperty('--drum-scale', scale);
+    }
+  }
+
+  function loadBounceIntensity() {
+    const raw = localStorage.getItem('taiko_drum_bounce_intensity');
+    const intensity = parseFloat(raw);
+    if (!isNaN(intensity) && intensity >= 0.90 && intensity <= 0.999) {
+      return intensity;
+    }
+    return 0.995;
+  }
+
+  function saveBounceIntensity(intensity) {
+    localStorage.setItem('taiko_drum_bounce_intensity', intensity.toString());
+  }
+
+  function updateDrumBounceIntensity(intensity) {
+    const drum = document.getElementById('drum');
+    if (drum) {
+      drum.style.setProperty('--drum-bounce-intensity', intensity);
     }
   }
 
@@ -662,14 +688,18 @@
     document.getElementById('save-mapping').addEventListener('click', () => {
       const mapping = readMappingFields();
       const scale = parseFloat(document.getElementById('drum-scale').value) || 1;
+      const sliderValue = parseFloat(document.getElementById('drum-bounce-intensity').value) || 0.90;
+      const bounceIntensity = 1.899 - sliderValue;
       const previewEnabled = document.getElementById('toggle-touch-zones')?.checked ?? false;
       const opacityPercent = parseFloat(document.getElementById('touch-zone-opacity')?.value) || 22;
       const opacity = Math.min(Math.max(opacityPercent / 100, 0.1), 0.8);
       saveMapping(mapping);
       saveScale(scale);
+      saveBounceIntensity(bounceIntensity);
       saveTouchZonePreview(previewEnabled);
       saveTouchZoneOpacity(opacity);
       updateDrumScale(scale);
+      updateDrumBounceIntensity(bounceIntensity);
       updateKeyOverlayLabels(mapping);
       setTouchZoneOpacity(opacity);
       setTouchZonePreview(previewEnabled);
@@ -704,6 +734,7 @@
     document.getElementById('reset-defaults').addEventListener('click', () => {
       saveMapping(DEFAULT);
       saveScale(1);
+      saveBounceIntensity(0.995);
       setMappingFields();
       sendMapping(DEFAULT);
     });
@@ -716,6 +747,19 @@
         drumScaleDisplay.textContent = `${Math.round(scale * 100)}%`;
         updateDrumScale(scale);
         updateFaceZones();
+      });
+    }
+
+    const bounceIntensityInput = document.getElementById('drum-bounce-intensity');
+    const bounceIntensityDisplay = document.getElementById('drum-bounce-intensity-value');
+    if (bounceIntensityInput && bounceIntensityDisplay) {
+      bounceIntensityInput.addEventListener('input', () => {
+        const sliderValue = parseFloat(bounceIntensityInput.value) || 0.90;
+        const intensity = 1.899 - sliderValue;
+        const scaleDownPercent = ((1 - intensity) * 100).toFixed(1);
+        bounceIntensityDisplay.textContent = `${scaleDownPercent}%`;
+        updateDrumBounceIntensity(intensity);
+        saveBounceIntensity(intensity);
       });
     }
 

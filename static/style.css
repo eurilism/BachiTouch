@@ -530,7 +530,7 @@ body.mobile-view .pause-button.compact img {
 }
 
 #drum.bounce {
-  transform: scale(calc(var(--drum-scale, 1) * 0.995));
+  transform: scale(calc(var(--drum-scale, 1) * var(--drum-bounce-intensity, 0.995)));
 }
 #drum-image {
   position: absolute;
