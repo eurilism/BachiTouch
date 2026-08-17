@@ -58,3 +58,11 @@ That being said I haven't found something like this after searching for years an
 - If the mobile UI cannot connect, confirm the server is running and use the exact URL shown in the GUI.
 - If USB mode fails, confirm ADB authorization on the device and that USB debugging is enabled.
 - If game input is not detected, ensure the Taiko game window has focus on the PC.
+
+  ## Build Instructions
+- Download Python
+- Clone the repository to your PC
+- Open the terminal to the cloned repository
+- Run `pip install -r requirements.txt` to install all dependencies
+- Run Pyinstaller using `server_gui.spec`
+    - `python -m pyinstaller .\server_gui.spec`
