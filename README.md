@@ -10,7 +10,7 @@ BachiTouch is a web-based touchscreen drum controller for Taiko no Tatsujin and 
 You don't need to download a separate app for your Android/iOS device to use this.
 
 ## ‼️DISCLAIMER
-This app and it's contents are ENTIRELY MADE by using Github Copilot in VSC and Google Gemini as an exploration of automated code generation. By executing, installing, or interacting with this app, you acknowledge and agree that you do so entirely at your own discretion and risk. 
+This app and it's contents are MOSTLY MADE by using Github Copilot in VSC and Google Gemini as an exploration of automated code generation. By executing, installing, or interacting with this app, you acknowledge and agree that you do so entirely at your own discretion and risk. 
 
 This project is complete and functional, but it is now provided "as-is." I am no longer actively developing or maintaining this repository. You are welcome to fork it if you want to make changes!
 
